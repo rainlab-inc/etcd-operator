@@ -146,10 +146,9 @@ func (r *Restore) prepareSeed(er *api.EtcdRestore) (err error) {
 		}
 	}()
 
-	clusterName := ecRef.Name
-
 	// Fetch the reference EtcdCluster
 	ecRef := er.Spec.EtcdCluster
+	clusterName := ecRef.Name
 	ec, err := r.etcdCRCli.EtcdV1beta2().EtcdClusters(r.namespace).Get(ecRef.Name, metav1.GetOptions{})
 	if err != nil {
 		// TODO: Check if error is "Not Found"
@@ -164,8 +163,7 @@ func (r *Restore) prepareSeed(er *api.EtcdRestore) (err error) {
 			},
 			Spec: ecRef,
 		}
-	}
-	else {
+	} else {
 		if err := ec.Spec.Validate(); err != nil {
 			return fmt.Errorf("invalid cluster spec: %v", err)
 		}
